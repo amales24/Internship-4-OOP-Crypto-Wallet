@@ -140,3 +140,67 @@ var walletsList = new List<Wallet>()
         nonFungibleAssetsList[14].Address
     }),
 };
+
+string StartMenu()
+{
+    Console.WriteLine("1 - Kreiraj wallet \n" +
+                      "2 - Pristupi walletu \n" +
+                      "0 - Izlazak iz aplikacije \n");
+
+    var myOptions = new List<string>() { "0", "1", "2" };
+    var myChoice = Input(myOptions);
+
+    Console.Clear();
+    return myChoice;
+}
+
+string Input(List<string> myOptions)
+{
+    var myChoice = Console.ReadLine().Trim().ToUpper();
+
+    while (!myOptions.Contains(myChoice))
+    {
+        Console.WriteLine("Ta opcija ne postoji, pokusajte ponovno:");
+        myChoice = Console.ReadLine().Trim().ToUpper();
+    }
+
+    return myChoice;
+}
+
+void ReturnToStartMenu()
+{
+    Console.WriteLine("\nP - Povratak na glavni menu \n0 - Izlazak iz aplikacije");
+
+    var myChoice = Input(new List<string>() { "P", "0" });
+
+    switch (myChoice)
+    {
+        case "0":
+            Console.Clear();
+            Console.WriteLine("Aplikacija zatvorena!");
+            Environment.Exit(0);
+            break;
+        case "P":
+            break;
+    }
+}
+
+string myChoice;
+do
+{
+    Console.Clear();
+    myChoice = StartMenu();
+
+    switch (myChoice)
+    {
+        case "0":
+            Console.Clear();
+            Console.WriteLine("Aplikacija zatvorena!");
+            Environment.Exit(0);
+            break;
+        case "1":
+            break;
+        case "2":
+            break;
+    }
+} while (true);
