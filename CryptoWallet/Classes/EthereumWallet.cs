@@ -10,6 +10,9 @@ namespace CryptoWallet.Classes
     public class EthereumWallet : Wallet
     {
         public List<Guid> NonFungibleAssetAddresses { get; }
-        public EthereumWallet(List<Guid> supportedAssets) : base(supportedAssets) { }
+        public EthereumWallet(List<Guid> supportedAssets, Dictionary<Guid, double> fungibleAssetBalance, List<Guid> nonFungibleAssetAddresses) : base(supportedAssets, fungibleAssetBalance) 
+        {
+            NonFungibleAssetAddresses = nonFungibleAssetAddresses;
+        }
     }
 }

@@ -9,6 +9,9 @@ namespace CryptoWallet.Classes
     public class SolanaWallet : Wallet
     {
         public List<Guid> NonFungibleAssetAddresses { get; }
-        public SolanaWallet(List<Guid> supportedAssets) : base(supportedAssets) { }
+        public SolanaWallet(List<Guid> supportedAssets, Dictionary<Guid, double> fungibleAssetBalance, List<Guid> nonFungibleAssetAddresses) : base(supportedAssets, fungibleAssetBalance) 
+        {
+            NonFungibleAssetAddresses = nonFungibleAssetAddresses;
+        }
     }
 }

@@ -9,14 +9,14 @@ namespace CryptoWallet.Classes
     public abstract class Wallet
     {
         public Guid Address { get;}
-        public Dictionary<Guid, int> FungibleAssetBalance { get; }
+        public Dictionary<Guid, double> FungibleAssetBalance { get; }
         public List<Guid> SupportedAssets { get; }
         public List<Guid> TransactionAddresses { get; }
 
-        public Wallet(List<Guid> supportedAssets)
+        public Wallet(List<Guid> supportedAssets, Dictionary<Guid, double> fungibleAssetBalance)
         {
             Address = Guid.NewGuid();
-            FungibleAssetBalance = new Dictionary<Guid, int>();
+            FungibleAssetBalance = fungibleAssetBalance;
             SupportedAssets = supportedAssets;
             TransactionAddresses = new List<Guid>();
         }
