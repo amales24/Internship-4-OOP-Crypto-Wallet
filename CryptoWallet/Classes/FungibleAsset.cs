@@ -9,6 +9,9 @@ namespace CryptoWallet.Classes
     public class FungibleAsset : Asset
     {
         public string Label { get; set; }
-        public FungibleAsset() : base() { }
+        public FungibleAsset(double value, string name, string label) : base(value, name) 
+        {
+            Label = label;
+        }
     }
 }

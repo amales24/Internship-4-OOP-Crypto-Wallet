@@ -9,7 +9,7 @@ namespace CryptoWallet.Classes
     public class NonFungibleAsset : Asset
     {
         public Guid FungibleAssetAddress { get; }
-        public NonFungibleAsset(Guid fungibleAssetAddress) : base() 
+        public NonFungibleAsset(Guid fungibleAssetAddress, double value, string name) : base(value, name) 
         {
             FungibleAssetAddress = fungibleAssetAddress;
         }

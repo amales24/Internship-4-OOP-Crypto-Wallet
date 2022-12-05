@@ -12,9 +12,11 @@ namespace CryptoWallet.Classes
         public string Name { get; set; }
         public double Value { get; protected set; }
 
-        public Asset() 
+        public Asset(double value, string name) 
         { 
             Address = Guid.NewGuid();
+            Value = value;
+            Name = name;
         }
     }
 }
