@@ -390,7 +390,7 @@ void Transfer(Wallet myWallet)
 
     if (!recipientWallet.SupportedAssets.Contains(Guid.Parse(myAssetAddress)))
     {
-        Console.WriteLine("Novcanik koji ste odabrali ne podrzava asset koji mu zelite poslati!");
+        Console.WriteLine("\nNovcanik koji ste odabrali ne podrzava asset koji mu zelite poslati!");
         ReturnToStartMenu();
         return;
     }
@@ -401,6 +401,8 @@ void Transfer(Wallet myWallet)
     {
         FungibleTransfer(myWallet, recipientWallet, myAsset);
     }
+    else
+        NonFungibleTransfer(myWallet, recipientWallet, myAsset);
 
     ReturnToStartMenu();
 }
@@ -434,12 +436,12 @@ double InputAmount()
 
 void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
 {
-    Console.WriteLine("Unesite kolicinu asseta koju zelite prebaciti: ");
+    Console.WriteLine("\nUnesite kolicinu asseta koju zelite prebaciti: ");
     var myAmount = InputAmount();
 
     if (myAmount > myWallet.GetMyFungibleAssetValue(myAsset))
     {
-        Console.WriteLine("Stanje na racunu nije dovoljno za izvrsiti transakciju!");
+        Console.WriteLine("\nStanje na racunu nije dovoljno za izvrsiti transakciju!");
         return;
     }
 
@@ -465,4 +467,18 @@ void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
     var rRangeDouble = rDouble * (upperBound - lowerBound) + lowerBound;
 
     myAsset.ChangeAssetValueInUSD(rRangeDouble);
+}
+
+void NonFungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
+{
+    Console.WriteLine("\nJeste li sigurni da zelite izvrsiti transakciju?");
+
+    if (!ConfirmDialogue())
+    {
+        Console.WriteLine("Radnja zaustavljena!");
+        return;
+    }
+
+    NonFungibleAsset myNonFungibleAsset = (NonFungibleAsset)myAsset;
+
 }
