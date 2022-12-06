@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,18 @@ namespace CryptoWallet.Classes
         public NonFungibleAsset(Guid fungibleAssetAddress, double value, string name) : base(value, name) 
         {
             FungibleAssetAddress = fungibleAssetAddress;
+        }
+
+        public override bool IsFungible()
+        {
+            return false;
+        }
+
+        public double GetValueInUSD()
+        {
+            var myCurrency = Globals.fungibleAssetsList.Find(a => a.Address == FungibleAssetAddress);
+
+            return Value * myCurrency.Value;
         }
     }
 }

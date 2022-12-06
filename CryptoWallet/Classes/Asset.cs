@@ -19,5 +19,7 @@ namespace CryptoWallet.Classes
             Name = name;
             OldValue = value;
         }
+
+        public abstract bool IsFungible();
     }
 }

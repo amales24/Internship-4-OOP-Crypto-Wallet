@@ -29,10 +29,7 @@ namespace CryptoWallet.Classes
             double totalValue = 0;
 
             foreach (var assetAddress in FungibleAssetBalance.Keys)
-            {
-                var myAsset = Globals.fungibleAssetsList.Find(a => a.Address == assetAddress);
-                totalValue += FungibleAssetBalance[assetAddress] * myAsset.Value;
-            }
+                totalValue += GetMyFungibleAssetValueInUSD(assetAddress);
 
             return totalValue;
         }
@@ -59,6 +56,19 @@ namespace CryptoWallet.Classes
         public double? GetValueBefore()
         {
             return TotalValueBefore;
+        }
+
+        public double GetMyFungibleAssetValueInUSD(Guid myAssetAddress)
+        {
+            if (!FungibleAssetBalance.Keys.Contains(myAssetAddress))
+            {
+                Console.WriteLine("Ovaj wallet ne sadrzi trazeni asset");
+                return 0;
+            }
+
+            var myAsset = Globals.fungibleAssetsList.Find(a => a.Address == myAssetAddress);
+
+            return FungibleAssetBalance[myAssetAddress] * myAsset.Value;
         }
     }
 }

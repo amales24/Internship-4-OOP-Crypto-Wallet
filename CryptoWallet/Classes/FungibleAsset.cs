@@ -13,5 +13,10 @@ namespace CryptoWallet.Classes
         {
             Label = label;
         }
+
+        public override bool IsFungible()
+        {
+            return true;
+        }
     }
 }

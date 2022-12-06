@@ -330,3 +330,19 @@ Wallet InputWalletAddress()
 
     return myWallet;
 }
+
+void Portfolio(Wallet myWallet)
+{
+    Console.WriteLine("Uspjesno ste pristupili zeljenom novcaniku, ovdje mozete vidjeti njegovo stanje:\n");
+    Console.WriteLine($"> Ukupna vrijednost svih asseta u USD: {(myWallet.GetTotalAssetValue() != 0? myWallet.GetTotalAssetValue() : "Nema nikakvih asseta!")}");
+
+    if (myWallet.GetTotalAssetValue() != 0)
+    {
+        Console.WriteLine("> Popis svih asseta: \n");
+
+        foreach (var fungibleAssetAddress in myWallet.FungibleAssetBalance)
+        {
+            Console.WriteLine("");
+        }
+    }
+}

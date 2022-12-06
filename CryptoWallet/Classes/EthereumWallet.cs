@@ -27,8 +27,7 @@ namespace CryptoWallet.Classes
             foreach (var assetAddress in NonFungibleAssetAddresses)
             {
                 var myAsset = Globals.nonFungibleAssetsList.Find(a => a.Address == assetAddress);
-                var myCurrency = Globals.fungibleAssetsList.Find(a => a.Address == myAsset.FungibleAssetAddress);
-                totalNonFungibleValue += myAsset.Value * myCurrency.Value;
+                totalNonFungibleValue += myAsset.GetValueInUSD();
             }
 
             return totalNonFungibleValue + base.GetTotalAssetValue();
