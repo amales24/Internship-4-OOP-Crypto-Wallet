@@ -300,8 +300,8 @@ void AccessWallet()
     {
         Console.WriteLine($"> Tip walleta: {wallet.GetWalletType()} \n" +
             $"> Adresa walleta: {wallet.Address} \n" +
-            $"> Ukupna vrijednost svih asseta u USD: {(wallet.GetTotalAssetValue() != 0? wallet.GetTotalAssetValue() : "Nemate nikakvih asseta!")} \n" +
-            $"> Postotak pada/povecanja ukupne USD vrijednosti u odnosu na prosli put: % \n");
+            $"> Ukupna vrijednost svih asseta u USD: {(wallet.GetTotalAssetValue() != 0? wallet.GetTotalAssetValue() : "Nema nikakvih asseta!")} \n" +
+            $"> Postotak pada/povecanja ukupne USD vrijednosti: {wallet.GetDifferencePercentage()} % \n");
     }
 
     Console.WriteLine("Unesite adresu walleta kojem zelite pristupiti:");

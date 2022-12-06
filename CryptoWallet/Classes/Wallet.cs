@@ -12,6 +12,7 @@ namespace CryptoWallet.Classes
         public Dictionary<Guid, double> FungibleAssetBalance { get; }
         public List<Guid> SupportedAssets { get; }
         public List<Guid> TransactionAddresses { get; }
+        private double? TotalValueBefore { get; set; }
 
         public Wallet(List<Guid> supportedAssets, Dictionary<Guid, double> fungibleAssetBalance)
         {
@@ -34,6 +35,20 @@ namespace CryptoWallet.Classes
             }
 
             return totalValue;
+        }
+
+        public double? GetDifferencePercentage()
+        {
+            if (TotalValueBefore == null)
+            {
+                TotalValueBefore = GetTotalAssetValue();
+                return 0.0;
+            }
+
+            var difference = GetTotalAssetValue() - TotalValueBefore;
+            var percentage = difference / TotalValueBefore;
+            
+            return percentage * 100;
         }
     }
 }
