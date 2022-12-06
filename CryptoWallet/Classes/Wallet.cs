@@ -41,14 +41,24 @@ namespace CryptoWallet.Classes
         {
             if (TotalValueBefore == null)
             {
-                TotalValueBefore = GetTotalAssetValue();
-                return 0.0;
+                SetValueBefore();
+                return 0;
             }
 
             var difference = GetTotalAssetValue() - TotalValueBefore;
             var percentage = difference / TotalValueBefore;
             
             return percentage * 100;
+        }
+
+        public void SetValueBefore()
+        {
+            TotalValueBefore = GetTotalAssetValue();
+        }
+
+        public double? GetValueBefore()
+        {
+            return TotalValueBefore;
         }
     }
 }
