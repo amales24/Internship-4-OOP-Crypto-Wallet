@@ -203,6 +203,7 @@ do
             CreateWallet();
             break;
         case "2":
+            AccessWallet();
             break;
     }
 } while (true);
@@ -288,4 +289,9 @@ void CreateSolanaWallet()
     }
 
     ReturnToStartMenu();
+}
+
+void AccessWallet()
+{
+
 }

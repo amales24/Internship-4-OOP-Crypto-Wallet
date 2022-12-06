@@ -14,5 +14,10 @@ namespace CryptoWallet.Classes
         {
             NonFungibleAssetAddresses = nonFungibleAssetAddresses;
         }
+
+        public override WalletType GetWalletType()
+        {
+            return WalletType.Ethereum;
+        }
     }
 }

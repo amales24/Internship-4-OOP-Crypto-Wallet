@@ -20,5 +20,7 @@ namespace CryptoWallet.Classes
             SupportedAssets = supportedAssets;
             TransactionAddresses = new List<Guid>();
         }
+
+        public abstract WalletType GetWalletType();
     }
 }

@@ -9,5 +9,10 @@ namespace CryptoWallet.Classes
     public class BitcoinWallet : Wallet
     {
         public BitcoinWallet(List<Guid> supportedAssests, Dictionary<Guid, double> fungibleAssetBalance) : base(supportedAssests, fungibleAssetBalance) { }
+
+        public override WalletType GetWalletType()
+        {
+            return WalletType.Bitcoin;
+        }
     }
 }
