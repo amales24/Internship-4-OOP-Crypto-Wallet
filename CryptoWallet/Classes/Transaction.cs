@@ -22,6 +22,7 @@ namespace CryptoWallet.Classes
             DateOfTransaction = dateOfTransaction;
             SenderWalletAddress = senderWalletAddress; 
             RecipientWalletAddress = recipientWalletAddress;
+            IsRevoked = false;
         }
     }
 }
