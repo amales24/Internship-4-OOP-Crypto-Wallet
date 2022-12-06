@@ -297,12 +297,7 @@ void AccessWallet()
     Console.WriteLine("Popis svih dostupnih walleta: \n");
 
     foreach (var wallet in Globals.walletsList)
-    {
-        Console.WriteLine($"> Tip walleta: {wallet.GetWalletType()} \n" +
-            $"> Adresa walleta: {wallet.Address} \n" +
-            $"> Ukupna vrijednost svih asseta u USD: {(wallet.GetTotalAssetValue() != 0? wallet.GetTotalAssetValue() : "Nema nikakvih asseta!")} \n" +
-            $"> Postotak pada/povecanja ukupne USD vrijednosti: {wallet.GetDifferencePercentage()} % \n");
-    }
+        wallet.PrintWalletInfo();
 
     Console.WriteLine("Unesite adresu walleta kojem zelite pristupiti:");
     var myWallet = InputWalletAddress();
@@ -343,5 +338,5 @@ void Portfolio(Wallet myWallet)
         return;
     }
 
-    myWallet.PrintWalletState();
+    myWallet.PrintPortfolio();
 }

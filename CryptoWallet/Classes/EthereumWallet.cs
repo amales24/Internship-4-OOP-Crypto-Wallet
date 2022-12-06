@@ -33,9 +33,9 @@ namespace CryptoWallet.Classes
             return totalNonFungibleValue + base.GetTotalAssetValue();
         }
 
-        public override void PrintWalletState()
+        public override void PrintPortfolio()
         {
-            base.PrintWalletState();
+            base.PrintPortfolio();
 
             foreach (var myNonFungibleAddress in NonFungibleAssetAddresses)
             {

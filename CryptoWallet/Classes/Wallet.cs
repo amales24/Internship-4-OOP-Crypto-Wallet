@@ -72,7 +72,15 @@ namespace CryptoWallet.Classes
             return FungibleAssetBalance[myAsset.Address] * myAsset.Value;
         }
 
-        public virtual void PrintWalletState()
+        public void PrintWalletInfo()
+        {
+            Console.WriteLine($"> Tip walleta: {GetWalletType()} \n" +
+            $"> Adresa walleta: {Address} \n" +
+            $"> Ukupna vrijednost svih asseta u USD: {(GetTotalAssetValue() != 0 ? GetTotalAssetValue() : "Nema nikakvih asseta!")} \n" +
+            $"> Postotak pada/povecanja ukupne USD vrijednosti: {GetDifferencePercentage()} % \n");
+        }
+
+        public virtual void PrintPortfolio()
         {
             Console.WriteLine($"> Ukupna vrijednost svih asseta u USD: {GetTotalAssetValue()} \n" +
                                "> Popis svih asseta: \n");
