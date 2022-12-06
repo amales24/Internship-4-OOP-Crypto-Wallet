@@ -27,8 +27,11 @@ namespace CryptoWallet.Classes
         {
             double totalValue = 0;
 
-            foreach (var asset in FungibleAssetBalance)
-                totalValue += asset.Value;
+            foreach (var assetAddress in FungibleAssetBalance.Keys)
+            {
+                var myAsset = Globals.fungibleAssetsList.Find(a => a.Address == assetAddress);
+                totalValue += FungibleAssetBalance[assetAddress] * myAsset.Value;
+            }
 
             return totalValue;
         }

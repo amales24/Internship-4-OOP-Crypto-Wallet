@@ -20,6 +20,18 @@ namespace CryptoWallet.Classes
             return WalletType.Ethereum;
         }
 
+        public override double GetTotalAssetValue()
+        {
+            double totalNonFungibleValue = 0;
 
+            foreach (var assetAddress in NonFungibleAssetAddresses)
+            {
+                var myAsset = Globals.nonFungibleAssetsList.Find(a => a.Address == assetAddress);
+                var myCurrency = Globals.fungibleAssetsList.Find(a => a.Address == myAsset.FungibleAssetAddress);
+                totalNonFungibleValue += myAsset.Value * myCurrency.Value;
+            }
+
+            return totalNonFungibleValue + base.GetTotalAssetValue();
+        }
     }
 }
