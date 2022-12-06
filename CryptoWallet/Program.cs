@@ -251,6 +251,7 @@ void CreateBitcoinWallet()
     else
     {
         var newWallet = new BitcoinWallet(bitcoinSupported, new Dictionary<Guid, double>());
+        walletsList.Add(newWallet);
         Console.WriteLine("\nUspješno ste kreirali novi Bitcoin wallet!");
     }
 
@@ -266,6 +267,7 @@ void CreateEthereumWallet()
     else
     {
         var newWallet = new EthereumWallet(ethereumSupported, new Dictionary<Guid, double>(), new List<Guid>());
+        walletsList.Add(newWallet);
         Console.WriteLine("\nUspješno ste kreirali novi Ethereum wallet!");
     }
 
@@ -281,6 +283,7 @@ void CreateSolanaWallet()
     else
     {
         var newWallet = new SolanaWallet(solanaSupported, new Dictionary<Guid, double>(), new List<Guid>());
+        walletsList.Add(newWallet);
         Console.WriteLine("\nUspješno ste kreirali novi Solana wallet!");
     }
 
