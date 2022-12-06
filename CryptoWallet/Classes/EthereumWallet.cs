@@ -19,5 +19,7 @@ namespace CryptoWallet.Classes
         {
             return WalletType.Ethereum;
         }
+
+
     }
 }

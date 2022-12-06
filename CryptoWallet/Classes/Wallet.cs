@@ -22,5 +22,15 @@ namespace CryptoWallet.Classes
         }
 
         public abstract WalletType GetWalletType();
+
+        public virtual double GetTotalAssetValue()
+        {
+            double totalValue = 0;
+
+            foreach (var asset in FungibleAssetBalance)
+                totalValue += asset.Value;
+
+            return totalValue;
+        }
     }
 }
