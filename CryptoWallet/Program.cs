@@ -305,5 +305,28 @@ void AccessWallet()
     }
 
     Console.WriteLine("Unesite adresu walleta kojem zelite pristupiti:");
+    var myWallet = InputWalletAddress();
+
     ReturnToStartMenu();
+}
+
+Wallet InputWalletAddress()
+{
+    var myWalletAddress = Console.ReadLine().Trim();
+    Wallet myWallet;
+
+    while (true)
+    {
+        myWallet = Globals.walletsList.Find(w => w.Address.ToString() == myWalletAddress);
+
+        if (myWallet == null)
+        {
+            Console.WriteLine("\nWallet s tom adresom ne postoji, pokusajte ponovno:");
+            myWalletAddress = Console.ReadLine().Trim();
+        }
+        else
+            break;
+    }
+
+    return myWallet;
 }
