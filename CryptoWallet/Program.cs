@@ -145,7 +145,7 @@ string StartMenu()
 {
     Console.WriteLine("1 - Kreiraj wallet \n" +
                       "2 - Pristupi walletu \n" +
-                      "0 - Izlazak iz aplikacije \n");
+                      "0 - Izlazak iz aplikacije");
 
     var myOptions = new List<string>() { "0", "1", "2" };
     var myChoice = Input(myOptions);
@@ -169,7 +169,8 @@ string Input(List<string> myOptions)
 
 void ReturnToStartMenu()
 {
-    Console.WriteLine("\nP - Povratak na glavni menu \n0 - Izlazak iz aplikacije");
+    Console.WriteLine("\nP - Povratak na glavni menu \n" +
+                        "0 - Izlazak iz aplikacije");
 
     var myChoice = Input(new List<string>() { "P", "0" });
 
@@ -199,8 +200,89 @@ do
             Environment.Exit(0);
             break;
         case "1":
+            CreateWallet();
             break;
         case "2":
             break;
     }
 } while (true);
+
+void CreateWallet()
+{
+    Console.WriteLine("1 - Bitcoin wallet \n" + 
+                      "2 - Ethereum wallet \n" + 
+                      "3 - Solana wallet \n" + 
+                      "P - Povratak na glavni menu");
+
+    var myOptions = new List<string> { "1", "2", "3", "P" };
+    var myChoice = Input(myOptions);
+
+    switch(myChoice)
+    {
+        case "1":
+            CreateBitcoinWallet();
+            break;
+        case "2":
+            CreateEthereumWallet();
+            break;
+        case "3":
+            CreateSolanaWallet();
+            break;
+        case "P":
+            break;
+    }
+}
+
+bool ConfirmDialogue()
+{
+    Console.WriteLine("\nY - Zelim \n" +
+                        "N - Ne zelim");
+    var myChoice = Input(new List<string>() { "Y", "N" });
+
+    return myChoice == "Y";
+}
+
+void CreateBitcoinWallet()
+{
+    Console.WriteLine("\nJeste li sigurni da zelite kreirati novi Bitcoin wallet?");
+
+    if (!ConfirmDialogue())
+        Console.WriteLine("\nRadnja zaustavljena!");
+    else
+    {
+        var newWallet = new BitcoinWallet(bitcoinSupported, new Dictionary<Guid, double>());
+        Console.WriteLine("\nUspješno ste kreirali novi Bitcoin wallet!");
+    }
+
+    ReturnToStartMenu();
+}
+
+void CreateEthereumWallet()
+{
+    Console.WriteLine("\nJeste li sigurni da zelite kreirati novi Ethereum wallet?");
+
+    if (!ConfirmDialogue())
+        Console.WriteLine("\nRadnja zaustavljena!");
+    else
+    {
+        var newWallet = new EthereumWallet(ethereumSupported, new Dictionary<Guid, double>(), new List<Guid>());
+        Console.WriteLine("\nUspješno ste kreirali novi Ethereum wallet!");
+    }
+
+    ReturnToStartMenu();
+}
+
+void CreateSolanaWallet()
+{
+    Console.WriteLine("\nJeste li sigurni da zelite kreirati novi Solana wallet?");
+
+    if (!ConfirmDialogue())
+        Console.WriteLine("\nRadnja zaustavljena!");
+    else
+    {
+        var newWallet = new SolanaWallet(solanaSupported, new Dictionary<Guid, double>(), new List<Guid>());
+        Console.WriteLine("\nUspješno ste kreirali novi Solana wallet!");
+    }
+
+    ReturnToStartMenu();
+}
