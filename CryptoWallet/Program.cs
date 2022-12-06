@@ -307,6 +307,8 @@ void AccessWallet()
     Console.WriteLine("Unesite adresu walleta kojem zelite pristupiti:");
     var myWallet = InputWalletAddress();
 
+    Portfolio(myWallet);
+
     ReturnToStartMenu();
 }
 
@@ -333,16 +335,13 @@ Wallet InputWalletAddress()
 
 void Portfolio(Wallet myWallet)
 {
-    Console.WriteLine("Uspjesno ste pristupili zeljenom novcaniku, ovdje mozete vidjeti njegovo stanje:\n");
-    Console.WriteLine($"> Ukupna vrijednost svih asseta u USD: {(myWallet.GetTotalAssetValue() != 0? myWallet.GetTotalAssetValue() : "Nema nikakvih asseta!")}");
+    Console.WriteLine("\nUspjesno ste pristupili zeljenom walletu, ovdje mozete vidjeti njegovo stanje:\n");
 
-    if (myWallet.GetTotalAssetValue() != 0)
+    if (myWallet.GetTotalAssetValue() == 0)
     {
-        Console.WriteLine("> Popis svih asseta: \n");
-
-        foreach (var fungibleAssetAddress in myWallet.FungibleAssetBalance)
-        {
-            Console.WriteLine("");
-        }
+        Console.WriteLine("Wallet je prazan!");
+        return;
     }
+
+    myWallet.PrintWalletState();
 }

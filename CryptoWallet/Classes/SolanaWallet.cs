@@ -31,5 +31,22 @@ namespace CryptoWallet.Classes
 
             return totalNonFungibleValue + base.GetTotalAssetValue();
         }
+
+        public override void PrintWalletState()
+        {
+            base.PrintWalletState();
+
+            foreach (var myNonFungibleAddress in NonFungibleAssetAddresses)
+            {
+                var myAsset = Globals.nonFungibleAssetsList.Find(a => a.Address == myNonFungibleAddress);
+                var myCurrency = Globals.fungibleAssetsList.Find(a => a.Address == myAsset.FungibleAssetAddress);
+
+                Console.WriteLine($"> Adresa: {myNonFungibleAddress} \n" +
+                    $"> Ime: {myAsset.Name} \n" +
+                    $"> Vrijednost u fungible assetu: {myAsset.Value} {myCurrency.Label}\n" +
+                    $"> Ukupna vrijednost u USD: {myAsset.GetValueInUSD()} \n" +
+                    $"> Postotak pada/povecanja ukupne USD vrijednosti: \n");
+            }
+        }
     }
 }
