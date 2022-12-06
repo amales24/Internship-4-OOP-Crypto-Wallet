@@ -21,5 +21,11 @@ namespace CryptoWallet.Classes
         }
 
         public abstract bool IsFungible();
+
+        public void ChangeAssetValueInUSD(double percentage)
+        {
+            OldValue = Value;
+            Value = (100 + percentage) * Value / 100;
+        }
     }
 }

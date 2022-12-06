@@ -49,5 +49,40 @@ namespace CryptoWallet.Classes
                     $"> Postotak pada/povecanja ukupne USD vrijednosti: \n");
             }
         }
+
+        public override List<Guid> GetAllAssetAddresses()
+        {
+            var myAssets = base.GetAllAssetAddresses();
+
+            foreach (var assetAddress in NonFungibleAssetAddresses)
+                myAssets.Add(assetAddress);
+
+            return myAssets;
+        }
+
+        public bool RemoveNonFungibleAsset(Guid myAssetAddress)
+        {
+            if (!NonFungibleAssetAddresses.Contains(myAssetAddress))
+            {
+                Console.WriteLine("Ovaj asset ne nalazi se u novcaniku!");
+                return false;
+            }
+            NonFungibleAssetAddresses.Remove(myAssetAddress);
+
+            return true;
+        }
+
+        public bool AddNonFungibleAsset(Guid myAssetAddress)
+        {
+            if (NonFungibleAssetAddresses.Contains(myAssetAddress))
+            {
+                Console.WriteLine("Ovaj asset vec se nalazi u novcaniku!");
+                return false;
+            }
+
+            NonFungibleAssetAddresses.Add(myAssetAddress);
+
+            return true;
+        }
     }
 }

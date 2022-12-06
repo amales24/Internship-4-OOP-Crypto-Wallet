@@ -39,6 +39,9 @@ Globals.nonFungibleAssetsList = new List<NonFungibleAsset>()
     new NonFungibleAsset(Globals.fungibleAssetsList[3].Address, 3.5, "Disintegration"),
 };
 
+Globals.allAssetsList = Globals.fungibleAssetsList.ConvertAll(x => (Asset)x);
+Globals.allAssetsList.AddRange(Globals.nonFungibleAssetsList);
+
 Globals.bitcoinSupported = new List<Guid>() 
 { 
     Globals.fungibleAssetsList[0].Address,
@@ -157,12 +160,12 @@ string StartMenu()
 
 string Input(List<string> myOptions)
 {
-    var myChoice = Console.ReadLine().Trim().ToUpper();
+    var myChoice = Console.ReadLine().Trim().ToLower();
 
     while (!myOptions.Contains(myChoice))
     {
-        Console.WriteLine("Ta opcija ne postoji, pokusajte ponovno:");
-        myChoice = Console.ReadLine().Trim().ToUpper();
+        Console.WriteLine("\nTa opcija ne postoji, pokusajte ponovno:");
+        myChoice = Console.ReadLine().Trim().ToLower();
     }
 
     return myChoice;
@@ -173,7 +176,7 @@ void ReturnToStartMenu()
     Console.WriteLine("\nP - Povratak na glavni menu \n" +
                         "0 - Izlazak iz aplikacije");
 
-    var myChoice = Input(new List<string>() { "P", "0" });
+    var myChoice = Input(new List<string>() { "p", "0" });
 
     switch (myChoice)
     {
@@ -182,7 +185,7 @@ void ReturnToStartMenu()
             Console.WriteLine("Aplikacija zatvorena!");
             Environment.Exit(0);
             break;
-        case "P":
+        case "p":
             break;
     }
 }
@@ -216,7 +219,7 @@ void CreateWallet()
                       "3 - Solana wallet \n" + 
                       "P - Povratak na glavni menu");
 
-    var myOptions = new List<string> { "1", "2", "3", "P" };
+    var myOptions = new List<string> { "1", "2", "3", "p" };
     var myChoice = Input(myOptions);
 
     switch(myChoice)
@@ -230,7 +233,7 @@ void CreateWallet()
         case "3":
             CreateSolanaWallet();
             break;
-        case "P":
+        case "p":
             break;
     }
 }
@@ -239,9 +242,9 @@ bool ConfirmDialogue()
 {
     Console.WriteLine("\nY - Zelim \n" +
                         "N - Ne zelim");
-    var myChoice = Input(new List<string>() { "Y", "N" });
+    var myChoice = Input(new List<string>() { "y", "n" });
 
-    return myChoice == "Y";
+    return myChoice == "y";
 }
 
 void CreateBitcoinWallet()
@@ -297,14 +300,35 @@ void AccessWallet()
     Console.WriteLine("Popis svih dostupnih walleta: \n");
 
     foreach (var wallet in Globals.walletsList)
+    {
         wallet.PrintWalletInfo();
+        wallet.SetValueBefore();
+    }
 
     Console.WriteLine("Unesite adresu walleta kojem zelite pristupiti:");
     var myWallet = InputWalletAddress();
 
+    Console.Clear();
     Portfolio(myWallet);
 
-    ReturnToStartMenu();
+    Console.WriteLine("1 - Transfer \n" +
+        "2 - Povijest transakcija \n" +
+        "P - Povratak na glavni menu");
+
+    var myOptions = new List<string>() { "1", "2", "p" };
+    var myChoice = Input(myOptions);
+
+    switch(myChoice)
+    {
+        case "1":
+            Transfer(myWallet);
+            break;
+        case "2":
+            Console.Clear();
+            break;
+        case "p":
+            break;
+    }
 }
 
 Wallet InputWalletAddress()
@@ -330,7 +354,7 @@ Wallet InputWalletAddress()
 
 void Portfolio(Wallet myWallet)
 {
-    Console.WriteLine("\nUspjesno ste pristupili zeljenom walletu, ovdje mozete vidjeti njegovo stanje:\n");
+    Console.WriteLine("Uspjesno ste pristupili zeljenom walletu, ovdje mozete vidjeti njegovo stanje:\n");
 
     if (myWallet.GetTotalAssetValue() == 0)
     {
@@ -339,4 +363,106 @@ void Portfolio(Wallet myWallet)
     }
 
     myWallet.PrintPortfolio();
+}
+
+void Transfer(Wallet myWallet)
+{
+    Console.WriteLine("Unesite adresu walleta kojem zelite poslati asset. Dolje možete vidjeti sve opcije:");
+
+    var myOptions = new List<string>();
+
+    foreach (var wallet in Globals.walletsList)
+    {
+        if (wallet.Address != myWallet.Address)
+        {
+            Console.WriteLine($"> {wallet.Address}, {wallet.GetWalletType()} wallet");
+            myOptions.Add(wallet.Address.ToString());
+        }
+    }
+    Console.WriteLine();
+
+    var recipientAddress = Input(myOptions);
+    var recipientWallet = Globals.walletsList.Find(w => w.Address.ToString() == recipientAddress);
+
+    Console.WriteLine("\nUnesite adresu asseta kojeg zelite poslati:");
+    var myAssetOptions = myWallet.GetAllAssetAddresses();
+    var myAssetAddress = Input(myAssetOptions.ConvertAll(x => x.ToString()));
+
+    if (!recipientWallet.SupportedAssets.Contains(Guid.Parse(myAssetAddress)))
+    {
+        Console.WriteLine("Novcanik koji ste odabrali ne podrzava asset koji mu zelite poslati!");
+        ReturnToStartMenu();
+        return;
+    }
+
+    var myAsset = Globals.allAssetsList.Find(a => a.Address == Guid.Parse(myAssetAddress));
+
+    if (myAsset.IsFungible())
+    {
+        FungibleTransfer(myWallet, recipientWallet, myAsset);
+    }
+
+    ReturnToStartMenu();
+}
+
+double InputAmount()
+{
+    var myAmountString = Console.ReadLine().Trim();
+    double myAmount;
+
+    while(true)
+    {
+        try
+        {
+            myAmount = double.Parse(myAmountString);
+
+            if (myAmount <= 0)
+            {
+                Console.WriteLine("Kolicina mora biti pozitivna, pokusajte ponovno:");
+                myAmountString = Console.ReadLine().Trim();
+            }
+
+            return myAmount;
+        }
+        catch
+        {
+            Console.WriteLine("\nPogresan unos, pokusajte ponovno: ");
+            myAmountString = Console.ReadLine().Trim();
+        }
+    }
+}
+
+void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
+{
+    Console.WriteLine("Unesite kolicinu asseta koju zelite prebaciti: ");
+    var myAmount = InputAmount();
+
+    if (myAmount > myWallet.GetMyFungibleAssetValue(myAsset))
+    {
+        Console.WriteLine("Stanje na racunu nije dovoljno za izvrsiti transakciju!");
+        return;
+    }
+
+    Console.WriteLine("\nJeste li sigurni da zelite izvrsiti transakciju?");
+
+    if (!ConfirmDialogue())
+    {
+        Console.WriteLine("Radnja zaustavljena!");
+        return;
+    }
+
+    myWallet.ChangeAssetBalance(myAsset.Address, - myAmount);
+    recipientWallet.ChangeAssetBalance(myAsset.Address, myAmount);
+
+    var myFungibleTransaction = new FungibleTransaction(myAsset.Address, DateTime.Now, myWallet.Address, recipientWallet.Address);
+    myWallet.TransactionAddresses.Add(myFungibleTransaction.Id);
+    recipientWallet.TransactionAddresses.Add(myFungibleTransaction.Id);
+
+    var random = new Random();
+    var rDouble = random.NextDouble();
+    var upperBound = -2.5;
+    var lowerBound = 2.5;
+    var rRangeDouble = rDouble * (upperBound - lowerBound) + lowerBound;
+
+    myAsset.ChangeAssetValueInUSD(rRangeDouble);
 }

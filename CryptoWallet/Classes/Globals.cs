@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,5 +15,6 @@ namespace CryptoWallet.Classes
         public static List<Guid> ethereumSupported;
         public static List<Guid> solanaSupported;
         public static List<Wallet> walletsList;
+        public static List<Asset> allAssetsList;
     }
 }

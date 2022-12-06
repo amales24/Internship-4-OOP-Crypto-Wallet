@@ -61,7 +61,7 @@ namespace CryptoWallet.Classes
             return TotalValueBefore;
         }
 
-        public double GetMyFungibleAssetValueInUSD(Asset myAsset)
+        public double GetMyFungibleAssetValue(Asset myAsset)
         {
             if (!FungibleAssetBalance.Keys.Contains(myAsset.Address))
             {
@@ -69,7 +69,12 @@ namespace CryptoWallet.Classes
                 return 0;
             }
 
-            return FungibleAssetBalance[myAsset.Address] * myAsset.Value;
+            return FungibleAssetBalance[myAsset.Address];
+        }
+
+        public double GetMyFungibleAssetValueInUSD(Asset myAsset)
+        {
+            return GetMyFungibleAssetValue(myAsset) * myAsset.Value;
         }
 
         public void PrintWalletInfo()
@@ -96,6 +101,27 @@ namespace CryptoWallet.Classes
                     $"> Ukupna vrijednost u USD: {GetMyFungibleAssetValueInUSD(myAsset)} \n" +
                     $"> Postotak pada/povecanja ukupne USD vrijednosti: \n");
             }
+        }
+
+        public virtual List<Guid> GetAllAssetAddresses()
+        {
+            return FungibleAssetBalance.Keys.ToList();
+        }
+
+        public void ChangeAssetBalance(Guid myAssetAddress, double amount)
+        {
+            if (!SupportedAssets.Contains(myAssetAddress))
+                Console.WriteLine("Ovaj asset nije podrzan u ovom novcaniku!");
+
+            else if (!FungibleAssetBalance.Keys.Contains(myAssetAddress) && amount < 0)
+                Console.WriteLine("Ovaj asset ne nalazi se u novcaniku!");
+
+            else if (!FungibleAssetBalance.Keys.Contains(myAssetAddress) && amount > 0)
+            {
+                FungibleAssetBalance.Add(myAssetAddress, amount);
+            }
+            else
+                FungibleAssetBalance[myAssetAddress] += amount;
         }
     }
 }
