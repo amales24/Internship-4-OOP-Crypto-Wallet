@@ -69,22 +69,22 @@ for (var i = 12; i < 20; i++)
 
 Globals.walletsList = new List<Wallet>()
 {
-    new BitcoinWallet(Globals.bitcoinSupported, new Dictionary<Guid, double>()
+    new BitcoinWallet(new Dictionary<Guid, double>()
     {
         {Globals.fungibleAssetsList[0].Address, 5},
         {Globals.fungibleAssetsList[8].Address, 45.5}
     }),
-    new BitcoinWallet(Globals.bitcoinSupported, new Dictionary<Guid, double>()
+    new BitcoinWallet(new Dictionary<Guid, double>()
     {
         {Globals.fungibleAssetsList[0].Address, 100},
         {Globals.fungibleAssetsList[9].Address, 15.3}
     }),
-    new BitcoinWallet(Globals.bitcoinSupported, new Dictionary<Guid, double>()
+    new BitcoinWallet(new Dictionary<Guid, double>()
     {
         {Globals.fungibleAssetsList[9].Address, 12.85},
         {Globals.fungibleAssetsList[8].Address, 89}
     }),
-    new EthereumWallet(Globals.ethereumSupported, new Dictionary<Guid, double>()
+    new EthereumWallet(new Dictionary<Guid, double>()
     {
         {Globals.fungibleAssetsList[1].Address, 305},
         {Globals.fungibleAssetsList[2].Address, 28.45}
@@ -94,7 +94,7 @@ Globals.walletsList = new List<Wallet>()
         Globals.nonFungibleAssetsList[4].Address,
         Globals.nonFungibleAssetsList[10].Address
     }),
-    new EthereumWallet(Globals.ethereumSupported, new Dictionary<Guid, double>()
+    new EthereumWallet(new Dictionary<Guid, double>()
     {
         {Globals.fungibleAssetsList[5].Address, 320.2},
         {Globals.fungibleAssetsList[6].Address, 5.7}
@@ -103,7 +103,7 @@ Globals.walletsList = new List<Wallet>()
         Globals.nonFungibleAssetsList[1].Address,
         Globals.nonFungibleAssetsList[2].Address
     }),
-    new EthereumWallet(Globals.ethereumSupported, new Dictionary<Guid, double>()
+    new EthereumWallet(new Dictionary<Guid, double>()
     {
         {Globals.fungibleAssetsList[1].Address, 5},
         {Globals.fungibleAssetsList[5].Address, 45.5},
@@ -113,7 +113,7 @@ Globals.walletsList = new List<Wallet>()
         Globals.nonFungibleAssetsList[3].Address,
         Globals.nonFungibleAssetsList[5].Address
     }),
-    new SolanaWallet(Globals.solanaSupported, new Dictionary<Guid, double>()
+    new SolanaWallet(new Dictionary<Guid, double>()
     {
         {Globals.fungibleAssetsList[3].Address, 2.3},
         {Globals.fungibleAssetsList[4].Address, 24.24}
@@ -122,7 +122,7 @@ Globals.walletsList = new List<Wallet>()
         Globals.nonFungibleAssetsList[12].Address,
         Globals.nonFungibleAssetsList[19].Address
     }),
-    new SolanaWallet(Globals.solanaSupported, new Dictionary<Guid, double>()
+    new SolanaWallet(new Dictionary<Guid, double>()
     {
         {Globals.fungibleAssetsList[4].Address, 121.1},
         {Globals.fungibleAssetsList[7].Address, 48.5}
@@ -132,7 +132,7 @@ Globals.walletsList = new List<Wallet>()
         Globals.nonFungibleAssetsList[15].Address,
         Globals.nonFungibleAssetsList[17].Address
     }),
-    new SolanaWallet(Globals.solanaSupported, new Dictionary<Guid, double>()
+    new SolanaWallet(new Dictionary<Guid, double>()
     {
         {Globals.fungibleAssetsList[3].Address, 44},
         {Globals.fungibleAssetsList[7].Address, 23}
@@ -252,7 +252,7 @@ void CreateBitcoinWallet()
         Console.WriteLine("\nRadnja zaustavljena!");
     else
     {
-        var newWallet = new BitcoinWallet(Globals.bitcoinSupported, new Dictionary<Guid, double>());
+        var newWallet = new BitcoinWallet(new Dictionary<Guid, double>());
         Globals.walletsList.Add(newWallet);
         Console.WriteLine("\nUspješno ste kreirali novi Bitcoin wallet!");
     }
@@ -268,7 +268,7 @@ void CreateEthereumWallet()
         Console.WriteLine("\nRadnja zaustavljena!");
     else
     {
-        var newWallet = new EthereumWallet(Globals.ethereumSupported, new Dictionary<Guid, double>(), new List<Guid>());
+        var newWallet = new EthereumWallet(new Dictionary<Guid, double>(), new List<Guid>());
         Globals.walletsList.Add(newWallet);
         Console.WriteLine("\nUspješno ste kreirali novi Ethereum wallet!");
     }
@@ -284,7 +284,7 @@ void CreateSolanaWallet()
         Console.WriteLine("\nRadnja zaustavljena!");
     else
     {
-        var newWallet = new SolanaWallet(Globals.solanaSupported, new Dictionary<Guid, double>(), new List<Guid>());
+        var newWallet = new SolanaWallet(new Dictionary<Guid, double>(), new List<Guid>());
         Globals.walletsList.Add(newWallet);
         Console.WriteLine("\nUspješno ste kreirali novi Solana wallet!");
     }
