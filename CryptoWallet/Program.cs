@@ -449,7 +449,7 @@ void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
 
     if (!ConfirmDialogue())
     {
-        Console.WriteLine("Radnja zaustavljena!");
+        Console.WriteLine("\nRadnja zaustavljena!");
         return;
     }
 
@@ -460,13 +460,10 @@ void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
     myWallet.TransactionAddresses.Add(myFungibleTransaction.Id);
     recipientWallet.TransactionAddresses.Add(myFungibleTransaction.Id);
 
-    var random = new Random();
-    var rDouble = random.NextDouble();
-    var upperBound = -2.5;
-    var lowerBound = 2.5;
-    var rRangeDouble = rDouble * (upperBound - lowerBound) + lowerBound;
+    var percentage = GetRandomPercentage();
+    myAsset.ChangeAssetValue(percentage);
 
-    myAsset.ChangeAssetValueInUSD(rRangeDouble);
+    Console.WriteLine("\nTransakcija uspjesno izvrsena!");
 }
 
 void NonFungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
@@ -475,10 +472,29 @@ void NonFungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
 
     if (!ConfirmDialogue())
     {
-        Console.WriteLine("Radnja zaustavljena!");
+        Console.WriteLine("\nRadnja zaustavljena!");
         return;
     }
 
-    NonFungibleAsset myNonFungibleAsset = (NonFungibleAsset)myAsset;
+    NonFungibleSupportingWallet myNonFungibleSupportingWallet = (NonFungibleSupportingWallet)myWallet;
+    NonFungibleSupportingWallet recipientNonFungibleSupportingWallet = (NonFungibleSupportingWallet)recipientWallet;
 
+    myNonFungibleSupportingWallet.RemoveNonFungibleAsset(myAsset.Address);
+    recipientNonFungibleSupportingWallet.AddNonFungibleAsset(myAsset.Address);
+
+    var myNonFungibleTransaction = new NonFungibleTransaction(myAsset.Address, DateTime.Now, myNonFungibleSupportingWallet.Address, recipientNonFungibleSupportingWallet.Address);
+
+    var percentage = GetRandomPercentage();
+    myAsset.ChangeAssetValue(percentage);
+
+    Console.WriteLine("Transakcija uspjesno izvrsena!");
+}
+
+double GetRandomPercentage()
+{
+    var random = new Random();
+    var rDouble = random.NextDouble();
+    var upperBound = -2.5;
+    var lowerBound = 2.5;
+    return rDouble * (upperBound - lowerBound) + lowerBound;
 }
