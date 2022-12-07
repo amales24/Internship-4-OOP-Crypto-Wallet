@@ -16,5 +16,6 @@ namespace CryptoWallet.Classes
         public static List<Guid> solanaSupported;
         public static List<Wallet> walletsList;
         public static List<Asset> allAssetsList;
+        public static List<Transaction> allTransactionsList;
     }
 }

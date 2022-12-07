@@ -11,5 +11,10 @@ namespace CryptoWallet.Classes
         public NonFungibleTransaction(Guid assetAddress, DateTime dateOfTransaction, Guid senderWalletAddress, Guid recipientWalletAddress) : base(assetAddress, dateOfTransaction, senderWalletAddress, recipientWalletAddress)
         { 
         }
+
+        public override bool IsFungible()
+        {
+            return false;
+        }
     }
 }

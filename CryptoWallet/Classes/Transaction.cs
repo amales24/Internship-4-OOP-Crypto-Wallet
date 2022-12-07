@@ -24,5 +24,7 @@ namespace CryptoWallet.Classes
             RecipientWalletAddress = recipientWalletAddress;
             IsRevoked = false;
         }
+
+        public abstract bool IsFungible();
     }
 }

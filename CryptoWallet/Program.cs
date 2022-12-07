@@ -145,6 +145,8 @@ Globals.walletsList = new List<Wallet>()
     }),
 };
 
+Globals.allTransactionsList = new List<Transaction>();
+
 string StartMenu()
 {
     Console.WriteLine("1 - Kreiraj wallet \n" +
@@ -331,6 +333,7 @@ void AccessWallet()
             break;
         case "3":
             Console.Clear();
+            TransactionHystory(myWallet);
             break;
         case "p":
             break;
@@ -420,7 +423,10 @@ void Transfer(Wallet myWallet)
 
     if (myAsset.IsFungible())
     {
-        FungibleTransfer(myWallet, recipientWallet, myAsset);
+        Console.WriteLine("\nUnesite kolicinu asseta koju zelite prebaciti: ");
+        var myAmount = InputAmount();
+
+        FungibleTransfer(myWallet, recipientWallet, myAsset, myAmount);
     }
     else
         NonFungibleTransfer(myWallet, recipientWallet, myAsset);
@@ -455,11 +461,8 @@ double InputAmount()
     }
 }
 
-void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
-{
-    Console.WriteLine("\nUnesite kolicinu asseta koju zelite prebaciti: ");
-    var myAmount = InputAmount();
-
+void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset, double myAmount)
+{ 
     if (myAmount > myWallet.GetMyFungibleAssetValue(myAsset))
     {
         Console.WriteLine("\nStanje na racunu nije dovoljno za izvrsiti transakciju!");
@@ -478,6 +481,8 @@ void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
     recipientWallet.ChangeAssetBalance(myAsset.Address, myAmount);
 
     var myFungibleTransaction = new FungibleTransaction(myAsset.Address, DateTime.Now, myWallet.Address, recipientWallet.Address);
+    Globals.allTransactionsList.Add(myFungibleTransaction);
+
     myWallet.TransactionAddresses.Add(myFungibleTransaction.Id);
     recipientWallet.TransactionAddresses.Add(myFungibleTransaction.Id);
 
@@ -504,11 +509,15 @@ void NonFungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
     recipientNonFungibleSupportingWallet.AddNonFungibleAsset(myAsset.Address);
 
     var myNonFungibleTransaction = new NonFungibleTransaction(myAsset.Address, DateTime.Now, myNonFungibleSupportingWallet.Address, recipientNonFungibleSupportingWallet.Address);
+    Globals.allTransactionsList.Add(myNonFungibleTransaction);
+
+    myWallet.TransactionAddresses.Add(myNonFungibleTransaction.Id);
+    recipientWallet.TransactionAddresses.Add(myNonFungibleTransaction.Id);
 
     var percentage = GetRandomPercentage();
     myAsset.ChangeAssetValue(percentage);
 
-    Console.WriteLine("Transakcija uspjesno izvrsena!");
+    Console.WriteLine("\nTransakcija uspjesno izvrsena!");
 }
 
 double GetRandomPercentage()
@@ -519,4 +528,120 @@ double GetRandomPercentage()
     var lowerBound = 2.5;
 
     return rDouble * (upperBound - lowerBound) + lowerBound;
+}
+
+void TransactionHystory(Wallet myWallet)
+{
+    if (myWallet.TransactionAddresses.Count == 0)
+    {
+        Console.WriteLine("U ovom walletu nema transakcija!");
+        ReturnToStartMenu();
+        return;
+    }
+
+    Console.WriteLine("Popis svih transakcija: \n");
+
+    var myTransactions = new List<Transaction>();
+
+    foreach (var transactionId in myWallet.TransactionAddresses)
+    {
+        var myTransaction = Globals.allTransactionsList.Find(t => t.Id == transactionId);
+        myTransactions.Add(myTransaction);
+    }
+
+    var myTransactionsSortedByDateDescending = myTransactions.OrderByDescending(x => x.DateOfTransaction);
+
+    foreach(var transaction in myTransactionsSortedByDateDescending)
+    {
+        Console.WriteLine($"> Id: {transaction.Id} \n" +
+            $"> Datum i vrijeme: {transaction.DateOfTransaction.ToString()} \n" +
+            $"> Adresa pošiljatelja: {transaction.SenderWalletAddress} \n" +
+            $"> Adresa primatelja: {transaction.RecipientWalletAddress}");
+
+        var myAsset = Globals.allAssetsList.Find(a => a.Address == transaction.AssetAddress);
+
+        if (transaction.IsFungible())
+        {
+            FungibleTransaction myFungibleTransaction = (FungibleTransaction)transaction;
+            Console.WriteLine($"> Kolicina: {myFungibleTransaction.StartBalanceOfSender - myFungibleTransaction.EndBalanceOfSender} \n" +
+                $"> Fungible asset ime: {myAsset.Name}\n");
+        }
+        else
+        {
+            NonFungibleTransaction myNonFungibleTransaction = (NonFungibleTransaction)transaction;
+            Console.WriteLine($"> Non fungible asset ime: {myAsset.Name}");
+        }
+
+        Console.WriteLine($"> Je li opozvana: {transaction.IsRevoked} \n");
+    }
+
+    Console.WriteLine("1 - Opozovi transakciju \n" +
+                      "P - Povratak na glavni menu");
+
+    var myChoice = Input(new List<string>() { "1", "p" });
+
+    switch(myChoice)
+    {
+        case "1":
+            RevokeTransaction(myWallet);
+            break;
+        case "p":
+            break;
+    }
+}
+
+void RevokeTransaction(Wallet myWallet)
+{
+    Console.WriteLine("\nUnesite Id transakcije koju zelite opozvati: ");
+    var myTransactionId = Input(myWallet.TransactionAddresses.ConvertAll(x => x.ToString()));
+
+    var myTransaction = Globals.allTransactionsList.Find(t => t.Id.ToString() == myTransactionId);
+
+    if (myWallet.Address != myTransaction.SenderWalletAddress)
+    {
+        Console.WriteLine("\nMozete opozvati samo transakciju koju ste kreirali!");
+        ReturnToStartMenu();
+        return;
+    }
+    if (!myTransaction.IsRevoked)
+    {
+        Console.WriteLine("\nOva transakcija je vec opozvana!");
+        ReturnToStartMenu();
+        return;
+    }
+    if ((myTransaction.DateOfTransaction - DateTime.Now).TotalSeconds > 500)
+    {
+        Console.WriteLine("\nNe mozete opozvati transakciju koja je nastala prije vise od 45 sekundi!");
+        ReturnToStartMenu();
+        return;
+    }
+  
+    Console.WriteLine("\nJeste li sigurni da zelite opozvati odabranu transakciju?");
+    if (!ConfirmDialogue())
+    {
+        Console.WriteLine("\nRadnja zaustavljena!");
+        ReturnToStartMenu();
+        return;
+    }
+
+    myTransaction.IsRevoked = true;
+
+    var senderWallet = Globals.walletsList.Find(w => w.Address == myTransaction.SenderWalletAddress);
+    var recipientWallet = Globals.walletsList.Find(w => w.Address == myTransaction.RecipientWalletAddress);
+    var myAsset = Globals.allAssetsList.Find(a => a.Address == myTransaction.AssetAddress);
+
+    if (myTransaction.IsFungible())
+    {
+        FungibleTransaction myFungibleTransaction = (FungibleTransaction)myTransaction;
+        FungibleTransfer(recipientWallet, senderWallet, myAsset, myFungibleTransaction.StartBalanceOfSender - myFungibleTransaction.EndBalanceOfSender);
+    }
+    else
+    {
+        NonFungibleTransaction myFungibleTransaction = (NonFungibleTransaction)myTransaction;
+        NonFungibleTransfer(recipientWallet, senderWallet, myAsset);
+    }
+
+    Console.WriteLine("\nRadnja uspjesno izvrsena!");
+
+    ReturnToStartMenu();
 }
