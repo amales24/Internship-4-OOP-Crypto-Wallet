@@ -363,7 +363,7 @@ Wallet InputWalletAddress()
 
 void Portfolio(Wallet myWallet)
 { 
-    if (myWallet.GetAllAssetAddresses().Count == 0)
+    if (myWallet.GetTotalAssetValue() == 0)
     {
         Console.WriteLine("Wallet je prazan!");
         ReturnToStartMenu();
@@ -377,7 +377,7 @@ void Portfolio(Wallet myWallet)
 
 void Transfer(Wallet myWallet)
 {
-    if (myWallet.GetAllAssetAddresses().Count == 0)
+    if (myWallet.GetTotalAssetValue() == 0)
     {
         Console.WriteLine("Ovaj wallet nema asseta za slanje!");
         ReturnToStartMenu();
@@ -616,13 +616,13 @@ void RevokeTransaction(Wallet myWallet)
         ReturnToStartMenu();
         return;
     }
-    if ((myTransaction.DateOfTransaction - DateTime.Now).TotalSeconds > 45)
+    if ((DateTime.Now - myTransaction.DateOfTransaction).TotalSeconds > 45)
     {
         Console.WriteLine("\nNe mozete opozvati transakciju koja je nastala prije vise od 45 sekundi!");
         ReturnToStartMenu();
         return;
     }
-  
+   
     Console.WriteLine("\nJeste li sigurni da zelite opozvati odabranu transakciju?");
     if (!ConfirmDialogue())
     {

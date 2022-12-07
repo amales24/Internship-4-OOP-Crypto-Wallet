@@ -40,7 +40,7 @@ namespace CryptoWallet.Classes
 
         public double? GetTotalDifferencePercentage()
         {
-            if (TotalValueBefore == null || TotalValueBefore == 0)
+            if (TotalValueBefore == null || (TotalValueBefore == 0 && GetTotalAssetValue() == 0))
             {
                 SetTotalValueBefore();
                 return 0;
@@ -104,7 +104,7 @@ namespace CryptoWallet.Classes
         {
             Console.WriteLine($"> Tip walleta: {GetWalletType()} \n" +
             $"> Adresa walleta: {Address} \n" +
-            $"> Ukupna vrijednost svih asseta u USD: {(GetAllAssetAddresses().Count != 0 ? GetTotalAssetValue() : "Nema nikakvih asseta!")} \n" +
+            $"> Ukupna vrijednost svih asseta u USD: {GetTotalAssetValue()} \n" +
             $"> Postotak pada/povecanja ukupne USD vrijednosti: {GetTotalDifferencePercentage()} % \n");
         }
 
