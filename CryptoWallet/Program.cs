@@ -480,7 +480,7 @@ void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset, do
     myWallet.ChangeAssetBalance(myAsset.Address, - myAmount);
     recipientWallet.ChangeAssetBalance(myAsset.Address, myAmount);
 
-    var myFungibleTransaction = new FungibleTransaction(myAsset.Address, DateTime.Now, myWallet.Address, recipientWallet.Address)
+    var myFungibleTransaction = new FungibleTransaction(myAsset.Address, myWallet.Address, recipientWallet.Address)
     {
         StartBalanceOfSender = myWallet.GetMyFungibleAssetValue(myAsset) + myAmount,
         EndBalanceOfSender = myWallet.GetMyFungibleAssetValue(myAsset),
@@ -515,7 +515,7 @@ void NonFungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset)
     myNonFungibleSupportingWallet.RemoveNonFungibleAsset(myAsset.Address);
     recipientNonFungibleSupportingWallet.AddNonFungibleAsset(myAsset.Address);
 
-    var myNonFungibleTransaction = new NonFungibleTransaction(myAsset.Address, DateTime.Now, myNonFungibleSupportingWallet.Address, recipientNonFungibleSupportingWallet.Address);
+    var myNonFungibleTransaction = new NonFungibleTransaction(myAsset.Address, myNonFungibleSupportingWallet.Address, recipientNonFungibleSupportingWallet.Address);
     Globals.allTransactionsList.Add(myNonFungibleTransaction);
 
     myWallet.TransactionAddresses.Add(myNonFungibleTransaction.Id);

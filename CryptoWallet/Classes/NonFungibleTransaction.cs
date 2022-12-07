@@ -8,7 +8,7 @@ namespace CryptoWallet.Classes
 {
     public class NonFungibleTransaction : Transaction
     {
-        public NonFungibleTransaction(Guid assetAddress, DateTime dateOfTransaction, Guid senderWalletAddress, Guid recipientWalletAddress) : base(assetAddress, dateOfTransaction, senderWalletAddress, recipientWalletAddress)
+        public NonFungibleTransaction(Guid assetAddress, Guid senderWalletAddress, Guid recipientWalletAddress) : base(assetAddress, senderWalletAddress, recipientWalletAddress)
         { 
         }
 

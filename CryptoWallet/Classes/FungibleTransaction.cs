@@ -12,7 +12,7 @@ namespace CryptoWallet.Classes
         public double EndBalanceOfSender { get; set; }
         public double StartBalanceOfRecipient { get; set; }
         public double EndBalanceOfRecipient { get; set; }
-        public FungibleTransaction(Guid assetAddress, DateTime dateOfTransaction, Guid senderWalletAddress, Guid recipientWalletAddress) : base(assetAddress, dateOfTransaction, senderWalletAddress, recipientWalletAddress)
+        public FungibleTransaction(Guid assetAddress, Guid senderWalletAddress, Guid recipientWalletAddress) : base(assetAddress, senderWalletAddress, recipientWalletAddress)
         {          
         }
 

@@ -15,11 +15,11 @@ namespace CryptoWallet.Classes
         public Guid RecipientWalletAddress { get; }
         public bool IsRevoked { get; set; }
 
-        public Transaction(Guid assetAddress, DateTime dateOfTransaction, Guid senderWalletAddress, Guid recipientWalletAddress)
+        public Transaction(Guid assetAddress, Guid senderWalletAddress, Guid recipientWalletAddress)
         {
             Id = Guid.NewGuid();
             AssetAddress = assetAddress;
-            DateOfTransaction = dateOfTransaction;
+            DateOfTransaction = DateTime.Now;
             SenderWalletAddress = senderWalletAddress; 
             RecipientWalletAddress = recipientWalletAddress;
             IsRevoked = false;
