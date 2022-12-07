@@ -53,12 +53,7 @@ namespace CryptoWallet.Classes
 
         public void SetValueBefore()
         {
-            TotalValueBefore = GetTotalAssetValue();
-        }
-
-        public double? GetValueBefore()
-        {
-            return TotalValueBefore;
+            TotalValueBefore = GetAllAssetAddresses().Count != 0 ? GetTotalAssetValue() : 0;
         }
 
         public double GetMyFungibleAssetValue(Asset myAsset)
@@ -81,7 +76,7 @@ namespace CryptoWallet.Classes
         {
             Console.WriteLine($"> Tip walleta: {GetWalletType()} \n" +
             $"> Adresa walleta: {Address} \n" +
-            $"> Ukupna vrijednost svih asseta u USD: {(GetTotalAssetValue() != 0 ? GetTotalAssetValue() : "Nema nikakvih asseta!")} \n" +
+            $"> Ukupna vrijednost svih asseta u USD: {(GetAllAssetAddresses().Count != 0 ? GetTotalAssetValue() : "Nema nikakvih asseta!")} \n" +
             $"> Postotak pada/povecanja ukupne USD vrijednosti: {GetDifferencePercentage()} % \n");
         }
 

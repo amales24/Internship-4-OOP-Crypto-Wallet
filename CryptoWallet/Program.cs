@@ -309,21 +309,27 @@ void AccessWallet()
     var myWallet = InputWalletAddress();
 
     Console.Clear();
-    Portfolio(myWallet);
+    Console.WriteLine("Uspjesno ste pristupili zeljenom walletu. Izaberite radnju: \n");
 
-    Console.WriteLine("1 - Transfer \n" +
-        "2 - Povijest transakcija \n" +
+    Console.WriteLine("1 - Portfolio \n" +
+        "2 - Transfer \n" +
+        "3 - Povijest transakcija \n" +
         "P - Povratak na glavni menu");
 
-    var myOptions = new List<string>() { "1", "2", "p" };
+    var myOptions = new List<string>() { "1", "2", "3", "p" };
     var myChoice = Input(myOptions);
 
     switch(myChoice)
     {
         case "1":
-            Transfer(myWallet);
+            Console.Clear();
+            Portfolio(myWallet);
             break;
         case "2":
+            Console.Clear();
+            Transfer(myWallet);
+            break;
+        case "3":
             Console.Clear();
             break;
         case "p":
@@ -353,21 +359,29 @@ Wallet InputWalletAddress()
 }
 
 void Portfolio(Wallet myWallet)
-{
-    Console.WriteLine("Uspjesno ste pristupili zeljenom walletu, ovdje mozete vidjeti njegovo stanje:\n");
-
-    if (myWallet.GetTotalAssetValue() == 0)
+{ 
+    if (myWallet.GetAllAssetAddresses().Count == 0)
     {
         Console.WriteLine("Wallet je prazan!");
+        ReturnToStartMenu();
         return;
     }
 
     myWallet.PrintPortfolio();
+
+    ReturnToStartMenu();
 }
 
 void Transfer(Wallet myWallet)
 {
-    Console.WriteLine("Unesite adresu walleta kojem zelite poslati asset. Dolje možete vidjeti sve opcije:");
+    if (myWallet.GetAllAssetAddresses().Count == 0)
+    {
+        Console.WriteLine("Ovaj wallet nema asseta za slanje!");
+        ReturnToStartMenu();
+        return;
+    }
+
+    Console.WriteLine("Unesite adresu walleta kojem zelite poslati asset. Dolje možete vidjeti sve opcije: \n");
 
     var myOptions = new List<string>();
 
@@ -384,8 +398,15 @@ void Transfer(Wallet myWallet)
     var recipientAddress = Input(myOptions);
     var recipientWallet = Globals.walletsList.Find(w => w.Address.ToString() == recipientAddress);
 
-    Console.WriteLine("\nUnesite adresu asseta kojeg zelite poslati:");
+    Console.WriteLine("\nUnesite adresu asseta kojeg zelite poslati, dolje mozete vidjeti sve opcije: \n");
     var myAssetOptions = myWallet.GetAllAssetAddresses();
+
+    foreach (var assetAddress in myAssetOptions)
+    {
+        var asset = Globals.allAssetsList.Find(a => a.Address == assetAddress);
+        Console.WriteLine(asset.IsFungible() ? ($"{asset.Address.ToString()}, kolicina: {myWallet.FungibleAssetBalance[asset.Address]}") : asset.Address.ToString());
+    }
+
     var myAssetAddress = Input(myAssetOptions.ConvertAll(x => x.ToString()));
 
     if (!recipientWallet.SupportedAssets.Contains(Guid.Parse(myAssetAddress)))
@@ -496,5 +517,6 @@ double GetRandomPercentage()
     var rDouble = random.NextDouble();
     var upperBound = -2.5;
     var lowerBound = 2.5;
+
     return rDouble * (upperBound - lowerBound) + lowerBound;
 }
