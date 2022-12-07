@@ -26,5 +26,15 @@ namespace CryptoWallet.Classes
 
             return Value * myCurrency.Value;
         }
+
+        public override void ChangeAssetValue(double percentage)
+        {
+            GetMyCurrency().ChangeAssetValue(percentage);
+        }
+
+        public FungibleAsset GetMyCurrency()
+        {
+            return Globals.fungibleAssetsList.Find(a => a.Address == FungibleAssetAddress);
+        }
     }
 }

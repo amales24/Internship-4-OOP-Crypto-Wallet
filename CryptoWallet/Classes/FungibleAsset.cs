@@ -18,5 +18,10 @@ namespace CryptoWallet.Classes
         {
             return true;
         }
+
+        public override void ChangeAssetValue(double percentage)
+        {
+            Value = (100 + percentage) * Value / 100;
+        }
     }
 }

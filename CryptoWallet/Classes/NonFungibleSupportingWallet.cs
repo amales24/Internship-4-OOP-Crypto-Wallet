@@ -40,7 +40,9 @@ namespace CryptoWallet.Classes
                     $"> Ime: {myAsset.Name} \n" +
                     $"> Vrijednost u fungible assetu: {myAsset.Value} {myCurrency.Label}\n" +
                     $"> Ukupna vrijednost u USD: {myAsset.GetValueInUSD()} \n" +
-                    $"> Postotak pada/povecanja ukupne USD vrijednosti: \n");
+                    $"> Postotak pada/povecanja ukupne USD vrijednosti: %");
+
+                //SetAssetValueBefore(myAsset);
             }
         }
 
@@ -77,6 +79,37 @@ namespace CryptoWallet.Classes
             NonFungibleAssetAddresses.Add(myAssetAddress);
 
             return true;
+        }
+
+        public override void SetAssetValueBefore(Asset myAsset)
+        {
+            base.SetAssetValueBefore(myAsset);
+
+            if(AssetValuesBefore.ContainsKey(myAsset.Address) && !myAsset.IsFungible())
+            {
+                NonFungibleAsset myNonFungibleAsset = (NonFungibleAsset)myAsset;
+                AssetValuesBefore[myAsset.Address] = myNonFungibleAsset.GetValueInUSD();
+            }
+            else
+            {
+                NonFungibleAsset myNonFungibleAsset = (NonFungibleAsset)myAsset;
+                AssetValuesBefore.Add(myAsset.Address, myNonFungibleAsset.GetValueInUSD());
+            }
+        }
+
+        public override double GetAssetDifferencePercentage(Asset myAsset)
+        {
+            var percentage = base.GetAssetDifferencePercentage(myAsset);
+            double difference;
+
+            if (!myAsset.IsFungible())
+            {
+                NonFungibleAsset myNonFungibleAsset = (NonFungibleAsset)myAsset;
+                difference = myNonFungibleAsset.GetValueInUSD() - AssetValuesBefore[myAsset.Address];
+                percentage = difference / AssetValuesBefore[myAsset.Address];
+            }
+
+            return percentage;
         }
     }
 }

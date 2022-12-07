@@ -302,7 +302,7 @@ void AccessWallet()
     foreach (var wallet in Globals.walletsList)
     {
         wallet.PrintWalletInfo();
-        wallet.SetValueBefore();
+        wallet.SetTotalValueBefore();
     }
 
     Console.WriteLine("Unesite adresu walleta kojem zelite pristupiti:");
