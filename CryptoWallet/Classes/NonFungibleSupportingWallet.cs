@@ -40,7 +40,7 @@ namespace CryptoWallet.Classes
                     $"> Ime: {myAsset.Name} \n" +
                     $"> Vrijednost u fungible assetu: {myAsset.Value} {myCurrency.Label}\n" +
                     $"> Ukupna vrijednost u USD: {myAsset.GetValueInUSD()} \n" +
-                    $"> Postotak pada/povecanja ukupne USD vrijednosti: %");
+                    $"> Postotak pada/povecanja ukupne USD vrijednosti: % \n");
 
                 //SetAssetValueBefore(myAsset);
             }

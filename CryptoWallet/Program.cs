@@ -480,7 +480,14 @@ void FungibleTransfer(Wallet myWallet, Wallet recipientWallet, Asset myAsset, do
     myWallet.ChangeAssetBalance(myAsset.Address, - myAmount);
     recipientWallet.ChangeAssetBalance(myAsset.Address, myAmount);
 
-    var myFungibleTransaction = new FungibleTransaction(myAsset.Address, DateTime.Now, myWallet.Address, recipientWallet.Address);
+    var myFungibleTransaction = new FungibleTransaction(myAsset.Address, DateTime.Now, myWallet.Address, recipientWallet.Address)
+    {
+        StartBalanceOfSender = myWallet.GetMyFungibleAssetValue(myAsset) + myAmount,
+        EndBalanceOfSender = myWallet.GetMyFungibleAssetValue(myAsset),
+        StartBalanceOfRecipient = recipientWallet.GetMyFungibleAssetValue(myAsset) - myAmount,
+        EndBalanceOfRecipient = recipientWallet.GetMyFungibleAssetValue(myAsset)
+    };
+
     Globals.allTransactionsList.Add(myFungibleTransaction);
 
     myWallet.TransactionAddresses.Add(myFungibleTransaction.Id);
@@ -564,7 +571,7 @@ void TransactionHystory(Wallet myWallet)
         {
             FungibleTransaction myFungibleTransaction = (FungibleTransaction)transaction;
             Console.WriteLine($"> Kolicina: {myFungibleTransaction.StartBalanceOfSender - myFungibleTransaction.EndBalanceOfSender} \n" +
-                $"> Fungible asset ime: {myAsset.Name}\n");
+                $"> Fungible asset ime: {myAsset.Name}");
         }
         else
         {
@@ -603,7 +610,7 @@ void RevokeTransaction(Wallet myWallet)
         ReturnToStartMenu();
         return;
     }
-    if (!myTransaction.IsRevoked)
+    if (myTransaction.IsRevoked)
     {
         Console.WriteLine("\nOva transakcija je vec opozvana!");
         ReturnToStartMenu();
@@ -633,12 +640,16 @@ void RevokeTransaction(Wallet myWallet)
     if (myTransaction.IsFungible())
     {
         FungibleTransaction myFungibleTransaction = (FungibleTransaction)myTransaction;
-        FungibleTransfer(recipientWallet, senderWallet, myAsset, myFungibleTransaction.StartBalanceOfSender - myFungibleTransaction.EndBalanceOfSender);
+        var amount = myFungibleTransaction.StartBalanceOfSender - myFungibleTransaction.EndBalanceOfSender;
+        senderWallet.ChangeAssetBalance(myAsset.Address, amount);
+        recipientWallet.ChangeAssetBalance(myAsset.Address, -amount);
     }
     else
     {
-        NonFungibleTransaction myFungibleTransaction = (NonFungibleTransaction)myTransaction;
-        NonFungibleTransfer(recipientWallet, senderWallet, myAsset);
+        NonFungibleSupportingWallet myNonFungibleSupportinSender = (NonFungibleSupportingWallet)senderWallet;
+        NonFungibleSupportingWallet myNonFungibleSupportingRecipient = (NonFungibleSupportingWallet)recipientWallet;
+        myNonFungibleSupportinSender.AddNonFungibleAsset(myAsset.Address);
+        myNonFungibleSupportingRecipient.RemoveNonFungibleAsset(myAsset.Address);
     }
 
     Console.WriteLine("\nRadnja uspjesno izvrsena!");
