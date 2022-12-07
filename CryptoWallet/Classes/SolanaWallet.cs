@@ -9,7 +9,8 @@ namespace CryptoWallet.Classes
     public class SolanaWallet : NonFungibleSupportingWallet
     {
         public SolanaWallet(Dictionary<Guid, double> fungibleAssetBalance, List<Guid> nonFungibleAssetAddresses) : base(Globals.solanaSupported, fungibleAssetBalance, nonFungibleAssetAddresses)
-        { }
+        {
+        }
 
         public override WalletType GetWalletType()
         {

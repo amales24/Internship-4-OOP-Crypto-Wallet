@@ -8,7 +8,9 @@ namespace CryptoWallet.Classes
 {
     public class BitcoinWallet : Wallet
     {
-        public BitcoinWallet(Dictionary<Guid, double> fungibleAssetBalance) : base(Globals.bitcoinSupported, fungibleAssetBalance) { }
+        public BitcoinWallet(Dictionary<Guid, double> fungibleAssetBalance) : base(Globals.bitcoinSupported, fungibleAssetBalance) 
+        {
+        }
 
         public override WalletType GetWalletType()
         {

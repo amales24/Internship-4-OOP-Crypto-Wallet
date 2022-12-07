@@ -10,7 +10,8 @@ namespace CryptoWallet.Classes
     public class EthereumWallet : NonFungibleSupportingWallet
     {
         public EthereumWallet(Dictionary<Guid, double> fungibleAssetBalance, List<Guid> nonFungibleAssetAddresses) : base(Globals.ethereumSupported, fungibleAssetBalance, nonFungibleAssetAddresses) 
-        {}
+        {
+        }
 
         public override WalletType GetWalletType()
         {

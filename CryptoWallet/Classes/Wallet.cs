@@ -13,7 +13,7 @@ namespace CryptoWallet.Classes
         public List<Guid> SupportedAssets { get; }
         public List<Guid> TransactionAddresses { get; }
         private double? TotalValueBefore { get; set; }
-        protected Dictionary<Guid, double> AssetValuesBefore { get; set; }
+        private Dictionary<Guid, double> FungibleBalanceBefore { get; set; }
 
         public Wallet(List<Guid> supportedAssets, Dictionary<Guid, double> fungibleAssetBalance)
         {
@@ -21,6 +21,8 @@ namespace CryptoWallet.Classes
             FungibleAssetBalance = fungibleAssetBalance;
             SupportedAssets = supportedAssets;
             TransactionAddresses = new List<Guid>();
+
+            FungibleBalanceBefore = new Dictionary<Guid, double>();
         }
 
         public abstract WalletType GetWalletType();
@@ -57,33 +59,6 @@ namespace CryptoWallet.Classes
             TotalValueBefore = GetAllAssetAddresses().Count != 0 ? GetTotalAssetValue() : 0;
         }
 
-        public virtual double GetAssetDifferencePercentage(Asset myAsset)
-        {
-            double difference;
-            double percentage = 0;
-
-            if (!AssetValuesBefore.ContainsKey(myAsset.Address))
-            {
-                SetAssetValueBefore(myAsset);
-                return 0;
-            }
-
-            if (myAsset.IsFungible())
-            {
-                difference = GetMyFungibleAssetValueInUSD(myAsset) - AssetValuesBefore[myAsset.Address];
-                percentage = difference / AssetValuesBefore[myAsset.Address];
-            }
-
-            return percentage * 100;
-        }
-        public virtual void SetAssetValueBefore(Asset myAsset)
-        {
-            if (AssetValuesBefore.ContainsKey(myAsset.Address) && myAsset.IsFungible())
-                AssetValuesBefore[myAsset.Address] = GetMyFungibleAssetValueInUSD(myAsset);
-            else if (myAsset.IsFungible())
-                AssetValuesBefore.Add(myAsset.Address, GetMyFungibleAssetValueInUSD(myAsset));
-        }
-
         public double GetMyFungibleAssetValue(Asset myAsset)
         {
             if (!FungibleAssetBalance.Keys.Contains(myAsset.Address))
@@ -98,6 +73,35 @@ namespace CryptoWallet.Classes
         public double GetMyFungibleAssetValueInUSD(Asset myAsset)
         {
             return GetMyFungibleAssetValue(myAsset) * myAsset.Value;
+        }
+
+        public void SetFungibleAssetValueBefore(Asset myAsset)
+        {
+            if (!FungibleBalanceBefore.ContainsKey(myAsset.Address))
+            {
+                FungibleBalanceBefore.Add(myAsset.Address, 0);
+            }
+
+            FungibleBalanceBefore[myAsset.Address] = GetMyFungibleAssetValueInUSD(myAsset);
+        }
+
+        public double GetFungibleAssetPercentageDifference(Asset myAsset)
+        {
+            if (!FungibleBalanceBefore.ContainsKey(myAsset.Address))
+            {
+                SetFungibleAssetValueBefore(myAsset);
+                return 0;
+            }
+
+            if (FungibleBalanceBefore[myAsset.Address] == 0 || GetMyFungibleAssetValueInUSD(myAsset) == 0)
+            {
+                return 0;
+            }
+
+            var difference = GetMyFungibleAssetValueInUSD(myAsset) - FungibleBalanceBefore[myAsset.Address];
+            var percentage = difference / FungibleBalanceBefore[myAsset.Address];
+
+            return percentage;
         }
 
         public void PrintWalletInfo()
@@ -122,9 +126,9 @@ namespace CryptoWallet.Classes
                     $"> Oznaka: {myAsset.Label} \n" +
                     $"> Vrijednost u fungible assetu: {fungibleAssetAddress.Value} \n" +
                     $"> Ukupna vrijednost u USD: {GetMyFungibleAssetValueInUSD(myAsset)} \n" +
-                    $"> Postotak pada/povecanja ukupne USD vrijednosti:  % \n");
+                    $"> Postotak pada/povecanja ukupne USD vrijednosti: {GetFungibleAssetPercentageDifference(myAsset)} % \n");
 
-                //SetAssetValueBefore(myAsset);
+                SetFungibleAssetValueBefore(myAsset);
             }
         }
 

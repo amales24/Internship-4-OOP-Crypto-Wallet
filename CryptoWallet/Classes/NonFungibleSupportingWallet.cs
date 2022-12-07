@@ -40,9 +40,7 @@ namespace CryptoWallet.Classes
                     $"> Ime: {myAsset.Name} \n" +
                     $"> Vrijednost u fungible assetu: {myAsset.Value} {myCurrency.Label}\n" +
                     $"> Ukupna vrijednost u USD: {myAsset.GetValueInUSD()} \n" +
-                    $"> Postotak pada/povecanja ukupne USD vrijednosti: % \n");
-
-                //SetAssetValueBefore(myAsset);
+                    $"> Postotak pada/povecanja ukupne USD vrijednosti:  % \n");
             }
         }
 
@@ -56,60 +54,34 @@ namespace CryptoWallet.Classes
             return myAssets;
         }
 
-        public bool RemoveNonFungibleAsset(Guid myAssetAddress)
+        public void RemoveNonFungibleAsset(Guid myAssetAddress)
         {
             if (!NonFungibleAssetAddresses.Contains(myAssetAddress))
             {
                 Console.WriteLine("Ovaj asset ne nalazi se u novcaniku!");
-                return false;
+                return;
             }
             NonFungibleAssetAddresses.Remove(myAssetAddress);
 
-            return true;
+            return;
         }
 
-        public bool AddNonFungibleAsset(Guid myAssetAddress)
+        public void AddNonFungibleAsset(Guid myAssetAddress)
         {
             if (NonFungibleAssetAddresses.Contains(myAssetAddress))
             {
                 Console.WriteLine("Ovaj asset vec se nalazi u novcaniku!");
-                return false;
+                return;
             }
 
+            if (!SupportedAssets.Contains(myAssetAddress)) 
+            {
+                Console.WriteLine("Ovaj asset nije podrzan u novcaniku!");
+                return;
+            }
             NonFungibleAssetAddresses.Add(myAssetAddress);
 
-            return true;
-        }
-
-        public override void SetAssetValueBefore(Asset myAsset)
-        {
-            base.SetAssetValueBefore(myAsset);
-
-            if(AssetValuesBefore.ContainsKey(myAsset.Address) && !myAsset.IsFungible())
-            {
-                NonFungibleAsset myNonFungibleAsset = (NonFungibleAsset)myAsset;
-                AssetValuesBefore[myAsset.Address] = myNonFungibleAsset.GetValueInUSD();
-            }
-            else
-            {
-                NonFungibleAsset myNonFungibleAsset = (NonFungibleAsset)myAsset;
-                AssetValuesBefore.Add(myAsset.Address, myNonFungibleAsset.GetValueInUSD());
-            }
-        }
-
-        public override double GetAssetDifferencePercentage(Asset myAsset)
-        {
-            var percentage = base.GetAssetDifferencePercentage(myAsset);
-            double difference;
-
-            if (!myAsset.IsFungible())
-            {
-                NonFungibleAsset myNonFungibleAsset = (NonFungibleAsset)myAsset;
-                difference = myNonFungibleAsset.GetValueInUSD() - AssetValuesBefore[myAsset.Address];
-                percentage = difference / AssetValuesBefore[myAsset.Address];
-            }
-
-            return percentage;
-        }
+            return;
+        }       
     }
 }
