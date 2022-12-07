@@ -22,7 +22,7 @@ namespace CryptoWallet.Classes
 
         public double GetValueInUSD()
         {
-            var myCurrency = Globals.fungibleAssetsList.Find(a => a.Address == FungibleAssetAddress);
+            var myCurrency = GetMyCurrency();
 
             return Value * myCurrency.Value;
         }
