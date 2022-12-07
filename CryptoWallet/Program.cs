@@ -616,7 +616,7 @@ void RevokeTransaction(Wallet myWallet)
         ReturnToStartMenu();
         return;
     }
-    if ((myTransaction.DateOfTransaction - DateTime.Now).TotalSeconds > 500)
+    if ((myTransaction.DateOfTransaction - DateTime.Now).TotalSeconds > 45)
     {
         Console.WriteLine("\nNe mozete opozvati transakciju koja je nastala prije vise od 45 sekundi!");
         ReturnToStartMenu();
