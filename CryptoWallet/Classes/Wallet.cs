@@ -101,7 +101,7 @@ namespace CryptoWallet.Classes
             var difference = GetMyFungibleAssetValueInUSD(myAsset) - FungibleBalanceBefore[myAsset.Address];
             var percentage = difference / FungibleBalanceBefore[myAsset.Address];
 
-            return percentage;
+            return percentage * 100;
         }
 
         public void PrintWalletInfo()

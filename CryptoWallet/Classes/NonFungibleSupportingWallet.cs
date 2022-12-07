@@ -39,8 +39,7 @@ namespace CryptoWallet.Classes
                 Console.WriteLine($"> Adresa: {myNonFungibleAddress} \n" +
                     $"> Ime: {myAsset.Name} \n" +
                     $"> Vrijednost u fungible assetu: {myAsset.Value} {myCurrency.Label}\n" +
-                    $"> Ukupna vrijednost u USD: {myAsset.GetValueInUSD()} \n" +
-                    $"> Postotak pada/povecanja ukupne USD vrijednosti:  % \n");
+                    $"> Ukupna vrijednost u USD: {myAsset.GetValueInUSD()} \n");
             }
         }
 
@@ -82,6 +81,6 @@ namespace CryptoWallet.Classes
             NonFungibleAssetAddresses.Add(myAssetAddress);
 
             return;
-        }       
+        }
     }
 }
